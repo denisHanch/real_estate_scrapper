@@ -21,7 +21,8 @@ def get_customers():
     session = Session()
     customers = session.execute(text("SELECT * FROM apartments_for_sale")).fetchall()
     session.close()
-    return jsonify([{'id':row[0], 'name':row[1], 'mail':row[2]} for row in customers])
+    return jsonify([ {name: row._mapping[name] for name in ['type', 'surface_area', 'street', 'city', 'price']} \
+                    for row in customers])
 
 
 if __name__ == '__main__':

@@ -38,6 +38,7 @@ services:
     build:
       context: ./scrapper
       dockerfile: Dockerfile
+    restart: on-failure
     depends_on:
       - chrome_node_1
       - postgres_db
