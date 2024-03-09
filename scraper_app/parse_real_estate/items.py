@@ -7,7 +7,7 @@ import scrapy
 
 
 class ParseRealEstateItem(scrapy.Item):
-    # define the fields for your item here like:
+    # Fields definition
     name = scrapy.Field()
     locality = scrapy.Field()
     price = scrapy.Field()

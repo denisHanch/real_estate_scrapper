@@ -1,14 +1,18 @@
 import streamlit as st
 import pandas as pd
+import os
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.sql import text
 
-print("APP START")
+# Get credentials
+username = os.getenv('POSTGRES_USER')
+password = os.getenv('POSTGRES_PASSWORD')
+database = os.getenv('POSTGRES_DB')
 
 # Database connection
-DATABASE_URL = "postgresql://myuser:mypassword@postgres_db:5432/mydatabase"
+DATABASE_URL = f"postgresql://{username}:{password}@postgres_db:5432/{database}"
 engine = create_engine(DATABASE_URL)
 Session = sessionmaker(bind=engine)
 

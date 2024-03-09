@@ -1,0 +1,2 @@
+hostname: postgres_db
+table_name: apartments_for_sale

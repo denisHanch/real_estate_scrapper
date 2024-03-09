@@ -5,27 +5,26 @@
 
 
 # useful for handling different item types with a single interface
-from itemadapter import ItemAdapter
-
+import os
 import psycopg2
 
 
 class ParseRealEstatePipeline:
      
     def __init__(self):
-        ## Connection Details
+        ## Get credentials
         hostname = 'postgres_db'
-        username = 'myuser'
-        password = 'mypassword' 
-        database = 'mydatabase'
+        username = os.getenv('POSTGRES_USER')
+        password = os.getenv('POSTGRES_PASSWORD')
+        database = os.getenv('POSTGRES_DB')
 
-        ## Create/Connect to database
+        ## Create connection to db
         self.connection = psycopg2.connect(host=hostname, user=username, password=password, dbname=database)
         
-        ## Create cursor, used to execute commands
+        ## Create cursor
         self.cur = self.connection.cursor()
         
-        ## Create quotes table if none exists
+        ## Create table if none exists
         self.cur.execute("""
         CREATE TABLE IF NOT EXISTS apartments_for_sale(
             id serial PRIMARY KEY, 
@@ -45,12 +44,12 @@ class ParseRealEstatePipeline:
             item["price"]
         ))
 
-        ## Execute insert of data into database
+        ## Insert of data into DB
         self.connection.commit()
         return item
 
     def close_spider(self, spider):
 
-        ## Close cursor & connection to database 
+        ## Clean up
         self.cur.close()
         self.connection.close()

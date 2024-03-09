@@ -1,6 +1,16 @@
 # Use an official Python runtime as a parent image
 FROM python:3.10-slim
 
+# READ credentials
+ARG POSTGRES_USER
+ARG POSTGRES_PASSWORD
+ARG POSTGRES_DB
+
+# ADD credentials to container environment
+ENV POSTGRES_USER $POSTGRES_USER
+ENV POSTGRES_PASSWORD $POSTGRES_PASSWORD
+ENV POSTGRES_DB $POSTGRES_DB
+
 # Set the working directory in the container
 WORKDIR /app
 
