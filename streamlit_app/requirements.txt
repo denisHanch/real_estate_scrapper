@@ -1,4 +1,4 @@
 SQLAlchemy
-flask
 pandas
+streamlit
 psycopg2-binary

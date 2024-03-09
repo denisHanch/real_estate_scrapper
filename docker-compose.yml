@@ -14,9 +14,9 @@ services:
       - postgres_data:/var/lib/postgresql/data
 
 
-  scrapper:
+  scraper:
     build:
-      context: ./scrapper
+      context: ./scraper_app
       dockerfile: Dockerfile
     depends_on:
       - postgres_db
@@ -25,13 +25,13 @@ services:
 
   web:
     build:
-      context: ./flask_app
+      context: ./streamlit_app
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
     depends_on:
       - postgres_db
-      - scrapper
+      - scraper
 
 volumes:
   postgres_data:
