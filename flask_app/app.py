@@ -1,5 +1,3 @@
-import os
-
 from flask import Flask, jsonify
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -19,10 +17,10 @@ def home():
 @app.route('/apartments')
 def get_customers():
     session = Session()
-    customers = session.execute(text("SELECT * FROM apartments_for_sale")).fetchall()
+    apartments = session.execute(text("SELECT * FROM apartments_for_sale")).fetchall()
     session.close()
-    return jsonify([ {name: row._mapping[name] for name in ['type', 'surface_area', 'street', 'city', 'price']} \
-                    for row in customers])
+    return jsonify([ {name: row._mapping[name] for name in ['name', 'locality', 'price']} \
+                    for row in apartments])
 
 
 if __name__ == '__main__':

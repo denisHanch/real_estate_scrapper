@@ -6,7 +6,6 @@ COPY . /scrapper/
 
 RUN pip install --no-cache-dir -r requirements.txt
 
+WORKDIR /scrapper/parse_real_estate
 
-COPY . /scrapper/
-
-CMD ["python", "parse_real_estate.py"]
+CMD ["scrapy", "crawl", "realestatespider"]

@@ -14,34 +14,13 @@ services:
       - postgres_data:/var/lib/postgresql/data
 
 
-  hub:
-    image: selenium/hub:4.13.0
-    ports:
-      - 4442:4442
-      - 4443:4443
-      - 4444:4444
-    environment:
-      GRID_MAX_SESSION: 8     
-
-  chrome_node_1:
-    image: selenium/node-chrome:4.13.0
-    depends_on:
-      - hub
-    environment:
-      SE_EVENT_BUS_HOST: hub
-      SE_EVENT_BUS_PUBLISH_PORT: 4442
-      SE_EVENT_BUS_SUBSCRIBE_PORT: 4443
-      SE_NODE_STEREOTYPE: "{\"browserName\":\"chrome\",\"browserVersion\":\"117\",\"platformName\": \"Windows 10\"}"
-
-
   scrapper:
     build:
       context: ./scrapper
       dockerfile: Dockerfile
-    restart: on-failure
     depends_on:
-      - chrome_node_1
       - postgres_db
+    restart: on-failure
 
 
   web:
@@ -53,7 +32,6 @@ services:
     depends_on:
       - postgres_db
       - scrapper
-
 
 volumes:
   postgres_data:
