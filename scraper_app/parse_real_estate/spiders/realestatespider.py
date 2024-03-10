@@ -4,7 +4,10 @@ from parse_real_estate.items import ParseRealEstateItem
 
 class RealestatespiderSpider(scrapy.Spider):
 
+    # Total number of apartments to parse
     entries_num = 500
+
+    # Search parameter for API
     per_page = 100
     pages = entries_num // per_page
 
@@ -24,7 +27,7 @@ class RealestatespiderSpider(scrapy.Spider):
 
     def parse(self, response):
 
-        #Get the list of apartments
+        #Get the list of apartments for the response object
         entries = response.json()['_embedded']['estates']
 
         item = ParseRealEstateItem()
@@ -36,7 +39,7 @@ class RealestatespiderSpider(scrapy.Spider):
             item['name'] = entry['name'].replace('\xa0', ' ')
             item['locality'] = entry['locality']
             item['price'] = entry['price']
-
+            
             apt_props = entry['name'].replace('\xa0', ' ').split(" ")
             item['apt_type'] = apt_props[3]
             item['apt_size_m_sqrt'] = apt_props[4]
