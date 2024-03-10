@@ -30,7 +30,11 @@ class ParseRealEstatePipeline:
             id serial PRIMARY KEY, 
             name text,
             locality text,
-            price INT
+            price INT,
+            apt_type text,
+            apt_size_m_sqrt INT,
+            street text,
+            city text
         )
         """)
         
@@ -38,10 +42,14 @@ class ParseRealEstatePipeline:
     def process_item(self, item, spider):
 
         ## Define insert statement
-        self.cur.execute(""" insert into apartments_for_sale (name, locality, price) values (%s,%s,%s)""", (
+        self.cur.execute(""" insert into apartments_for_sale (name, locality, price, apt_type, apt_size_m_sqrt, street, city) values (%s,%s,%s,%s,%s,%s,%s)""", (
             item["name"],
             item["locality"],
-            item["price"]
+            item["price"],
+            item['apt_type'],
+            item['apt_size_m_sqrt'],
+            item['street'],
+            item['city']
         ))
 
         ## Insert of data into DB

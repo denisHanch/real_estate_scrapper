@@ -19,7 +19,7 @@ class RealestatespiderSpider(scrapy.Spider):
         page                    - Page number
     """
 
-    start_urls = [f"https://www.sreality.cz/api/cs/v2/estates?category_main_cb=1&category_type_cb=1&sort=0&per_page=100&page={i}" \
+    start_urls = [f"https://www.sreality.cz/api/en/v2/estates?category_main_cb=1&category_type_cb=1&sort=0&per_page=100&page={i}" \
                   for i in range(1,6)]
 
     def parse(self, response):
@@ -36,4 +36,16 @@ class RealestatespiderSpider(scrapy.Spider):
             item['name'] = entry['name'].replace('\xa0', ' ')
             item['locality'] = entry['locality']
             item['price'] = entry['price']
+
+            apt_props = entry['name'].replace('\xa0', ' ').split(" ")
+            item['apt_type'] = apt_props[3]
+            item['apt_size_m_sqrt'] = apt_props[4]
+
+            adress = entry['locality'].replace('\xa0', ' ').split(",")
+            item['street'] = adress[0]
+            try:
+                item['city'] = adress[1]
+            except:
+                item['city'] = adress[0]
+
             yield item

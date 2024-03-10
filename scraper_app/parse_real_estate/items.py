@@ -11,3 +11,7 @@ class ParseRealEstateItem(scrapy.Item):
     name = scrapy.Field()
     locality = scrapy.Field()
     price = scrapy.Field()
+    apt_type = scrapy.Field()
+    apt_size_m_sqrt = scrapy.Field()
+    street = scrapy.Field()
+    city = scrapy.Field()
