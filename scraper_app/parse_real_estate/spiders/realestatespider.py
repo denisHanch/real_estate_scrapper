@@ -23,7 +23,7 @@ class RealestatespiderSpider(scrapy.Spider):
     """
 
     start_urls = [f"https://www.sreality.cz/api/en/v2/estates?category_main_cb=1&category_type_cb=1&sort=0&per_page=100&page={i}" \
-                  for i in range(1,6)]
+                  for i in range(1, 11)]
 
     def parse(self, response):
 

@@ -19,7 +19,7 @@ DATABASE_URL = f"postgresql://{username}:{password}@postgres_db:5432/{database}"
 engine = create_engine(DATABASE_URL)
 Session = sessionmaker(bind=engine)
 
-
+@st.cache_data
 def load_data():
     # Query the db
     session = Session()
@@ -27,13 +27,31 @@ def load_data():
     
     return pd.DataFrame(apartments)
 
+@st.cache_data
+def convert_df(df):
+    # IMPORTANT: Cache the conversion to prevent computation on every rerun
+    return df.to_csv().encode("utf-8")
+
+
 def main():
     st.title('Czech Republic real estate data')
 
     data = load_data()
     data.drop('id', axis=1, inplace=True)
-    st.write(data)
 
+    n_rows = 500
+    st.write(data.iloc[:n_rows])
+
+    # CSV export button
+    csv = convert_df(data)
+    st.download_button(
+        label="Export data as CSV",
+        data=csv,
+        file_name="real_estate_export.csv",
+        mime="text/csv",
+    )
+
+    # Truncate outliers truncate button
     trunc_outliers = st.sidebar.radio('Truncate outliers?', 
                                       ['Yes', 'No'], 
                                       index=1)
@@ -56,7 +74,7 @@ def main():
         data = data[data[column_to_plot] < upper_bound].reset_index(drop=True).copy()
 
 
-    apt_types = st.sidebar.radio("Select apartment type:", ['All types', 'Subset'], index=0)
+    apt_types = st.sidebar.radio("Select apartment type for visualization:", ['All types', 'Subset'], index=0)
     if apt_types == 'Subset':
 
         cat_list = data['apt_type'].unique()
