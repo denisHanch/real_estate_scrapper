@@ -1,4 +1,0 @@
-SQLAlchemy
-flask
-pandas
-psycopg2-binary

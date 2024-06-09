@@ -1,59 +1,42 @@
 version: '3'
 
-
 services:
   postgres_db:
     image: postgres:latest
     environment:
-      POSTGRES_USER: myuser
-      POSTGRES_PASSWORD: mypassword
-      POSTGRES_DB: mydatabase
+      POSTGRES_USER: $POSTGRES_USER
+      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+      POSTGRES_DB: $POSTGRES_DB
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
-
-  hub:
-    image: selenium/hub:4.13.0
-    ports:
-      - 4442:4442
-      - 4443:4443
-      - 4444:4444
-    environment:
-      GRID_MAX_SESSION: 8     
-
-  chrome_node_1:
-    image: selenium/node-chrome:4.13.0
-    depends_on:
-      - hub
-    environment:
-      SE_EVENT_BUS_HOST: hub
-      SE_EVENT_BUS_PUBLISH_PORT: 4442
-      SE_EVENT_BUS_SUBSCRIBE_PORT: 4443
-      SE_NODE_STEREOTYPE: "{\"browserName\":\"chrome\",\"browserVersion\":\"117\",\"platformName\": \"Windows 10\"}"
-
-
-  scrapper:
+  scraper:
     build:
-      context: ./scrapper
+      context: ./scraper_app
       dockerfile: Dockerfile
-    restart: on-failure
+      args:
+        POSTGRES_USER: $POSTGRES_USER
+        POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+        POSTGRES_DB: $POSTGRES_DB
     depends_on:
-      - chrome_node_1
       - postgres_db
-
+    restart: on-failure
 
   web:
     build:
-      context: ./flask_app
+      context: ./streamlit_app
       dockerfile: Dockerfile
+      args:
+        POSTGRES_USER: $POSTGRES_USER
+        POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+        POSTGRES_DB: $POSTGRES_DB
     ports:
       - "8080:8080"
     depends_on:
       - postgres_db
-      - scrapper
-
+      - scraper
 
 volumes:
   postgres_data:

@@ -1,6 +1,5 @@
 SQLAlchemy
 pandas
+streamlit
 psycopg2-binary
-scrapy
-selenium
-beautifulsoup4
+seaborn
